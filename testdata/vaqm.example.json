@@ -1,0 +1,557 @@
+{
+    "id": "fed684f4-a4cb-4d2b-8079-db07f85c73ba",
+    "oid": "vaqm.tryggArenaDecubitus.Bifrost",
+    "name": "Trygg Arena Decubitus",
+    "aqlBindings": [
+        {
+            "id": "369f01e7-5d54-4334-b4a5-4a6173234059",
+            "oid": "TryggArenaDecubitus",
+            "name": "TryggArenaDecubitus",
+            "defaultArchetypeId": "openEHR-EHR-OBSERVATION.decubitus_risk_npsp.v1",
+            "baseAql": "select a, o from composition a contains observation o[openEHR-EHR-OBSERVATION.decubitus_risk_npsp.v1]",
+            "paths": [
+                {
+                    "id": "DecubitusScore",
+                    "identifierRef": "o",
+                    "value": "/data[at0001]/events[at0002]/data[at0003]/items[at0009]/value/magnitude",
+                    "adminDescription": null,
+                    "dataType": ""
+                },
+                {
+                    "id": "DecubitusTimeRegistered",
+                    "identifierRef": "o",
+                    "value": "/data[at0001]/events[at0002]/time/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "ExistingDecubitus",
+                    "identifierRef": "o",
+                    "value": "/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "MobilityDecubitus",
+                    "identifierRef": "o",
+                    "value": "/data[at0001]/events[at0002]/data[at0003]/items[at0005]/value/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "EvaluatedRisk",
+                    "identifierRef": "o",
+                    "value": "/data[at0001]/events[at0002]/data[at0003]/items[at0006]/value/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                }
+            ],
+            "whereExpressions": [],
+            "orderByExpressions": [
+                {
+                    "id": "OrderBy1",
+                    "value": "$DecubitusTimeRegistered",
+                    "ascending": false,
+                    "adminDescription": null
+                }
+            ],
+            "predicates": [
+                {
+                    "id": "Decubitus",
+                    "where": "",
+                    "orderBy": "$OrderBy1",
+                    "adminDescription": null
+                }
+            ],
+            "adminDescription": null,
+            "keyValues": []
+        },
+        {
+            "id": "2b9129a8-083e-43db-ac41-30204f3a62a0",
+            "oid": "TryggArenaHudUndersøkelse",
+            "name": "TryggArenaHudUndersøkelse",
+            "defaultArchetypeId": "openEHR-EHR-ACTION.procedure.v1",
+            "baseAql": "select a, o from composition a contains ACTION o[openEHR-EHR-ACTION.procedure.v1]",
+            "paths": [
+                {
+                    "id": "ProcedureName",
+                    "identifierRef": "o",
+                    "value": "/description[at0001]/items[at0002]/value/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "ProcedureState",
+                    "identifierRef": "o",
+                    "value": "/ism_transition/current_state/defining_code/code_string",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "ProcedureTime",
+                    "identifierRef": "o",
+                    "value": "/time/value",
+                    "adminDescription": "",
+                    "dataType": "String"
+                }
+            ],
+            "whereExpressions": [
+                {
+                    "id": "IsSkinExam",
+                    "path": "$ProcedureName",
+                    "operator": "EQ",
+                    "value": "'undersøkelse av huden'",
+                    "adminDescription": ""
+                }
+            ],
+            "orderByExpressions": [
+                {
+                    "id": "orderByTime",
+                    "value": "$ProcedureTime",
+                    "ascending": false,
+                    "adminDescription": ""
+                }
+            ],
+            "predicates": [
+                {
+                    "id": "SkinExamination",
+                    "where": "$IsSkinExam",
+                    "orderBy": "$orderByTime",
+                    "adminDescription": ""
+                }
+            ],
+            "adminDescription": null,
+            "keyValues": []
+        },
+        {
+            "id": "3de1d370-4dc0-4a9f-8091-e6be05ef614e",
+            "oid": "TryggArenaDecubitusProcedures",
+            "name": "TryggArenaDecubitusProcedures",
+            "defaultArchetypeId": "openEHR-EHR-ACTION.procedure.v1",
+            "baseAql": "select a, o from composition a contains ACTION o[openEHR-EHR-ACTION.procedure.v1]",
+            "paths": [
+                {
+                    "id": "ProcedureName",
+                    "identifierRef": "o",
+                    "value": "/description[at0001]/items[at0002]/value/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "ProcedureState",
+                    "identifierRef": "o",
+                    "value": "/ism_transition/current_state/defining_code/code_string",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "ProcedureTime",
+                    "identifierRef": "o",
+                    "value": "/time/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "Id",
+                    "identifierRef": "a",
+                    "value": "/name/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                }
+            ],
+            "whereExpressions": [
+                {
+                    "id": "isOtherMeasurement",
+                    "path": "$ProcedureName",
+                    "operator": "EQ",
+                    "value": "'Tiltak mot trykksår'",
+                    "adminDescription": ""
+                },
+                {
+                    "id": "isEvaluation",
+                    "path": "$Id",
+                    "operator": "EQ",
+                    "value": "'TryggArenaDecubitusEvaluation'",
+                    "adminDescription": ""
+                }
+            ],
+            "orderByExpressions": [
+                {
+                    "id": "orderByTime",
+                    "value": "$ProcedureTime",
+                    "ascending": false,
+                    "adminDescription": ""
+                }
+            ],
+            "predicates": [
+                {
+                    "id": "DecubitusProcedure",
+                    "where": "$isOtherMeasurement",
+                    "orderBy": "$orderByTime",
+                    "adminDescription": ""
+                },
+                {
+                    "id": "DecubitusEvaluation",
+                    "where": "$isEvaluation",
+                    "orderBy": "$orderByTime",
+                    "adminDescription": ""
+                }
+            ],
+            "adminDescription": null,
+            "keyValues": []
+        },
+        {
+            "id": "7cfca04c-4a1a-4c15-8491-aca3e8a8bbf9",
+            "oid": "TryggArenaDecubitusHealthrisk",
+            "name": "TryggArenaDecubitusHealthrisk",
+            "defaultArchetypeId": "openEHR-EHR-EVALUATION.health_risk.v1",
+            "baseAql": "select a, o from composition a contains EVALUATION o[openEHR-EHR-EVALUATION.health_risk.v1]",
+            "paths": [
+                {
+                    "id": "HealthRisk",
+                    "identifierRef": "o",
+                    "value": "/data[at0001]/items[at0002]/value/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "HealthRiskLevel",
+                    "identifierRef": "o",
+                    "value": "/data[at0001]/items[at0003]/value/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                },
+                {
+                    "id": "HealthRiskUpdateTime",
+                    "identifierRef": "o",
+                    "value": "/protocol[at0010]/items[at0024]/value/value",
+                    "adminDescription": "",
+                    "dataType": ""
+                }
+            ],
+            "whereExpressions": [
+                {
+                    "id": "IsDecubitusRisk",
+                    "path": "$HealthRisk",
+                    "operator": "EQ",
+                    "value": "'Trykksår'",
+                    "adminDescription": ""
+                }
+            ],
+            "orderByExpressions": [
+                {
+                    "id": "orderByUpdateTime",
+                    "value": "$HealthRiskUpdateTime",
+                    "ascending": false,
+                    "adminDescription": ""
+                }
+            ],
+            "predicates": [
+                {
+                    "id": "DecubitusHealthRisk",
+                    "where": "$IsDecubitusRisk",
+                    "orderBy": "$orderByUpdateTime",
+                    "adminDescription": ""
+                }
+            ],
+            "adminDescription": null,
+            "keyValues": []
+        }
+    ],
+    "dataElements": [
+        {
+            "id": "6a8426a5-9ede-4f5d-816a-3f0c054f7a2f",
+            "oid": "DecubitusRisk",
+            "name": "Risiko for trykksår",
+            "adminName": "Decubitus risk",
+            "description": "Viser pasientens risiko for trykksår",
+            "categories": "TryggArenaDesktop,TryggArenaWall,TryggArenaMobil",
+            "displayFormat": "{ifnull(if(\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,\"Høy risiko for trykksår\",\"\" ),\"\" )}{ifnull(if(\"Lav trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,\"Lav risiko for trykksår\",\"\" ),\"\" )}{ifnull(if(ISNULL($DecubitusHealthRisk.HealthRiskLevel),\"Ingen risikovurdering registrert\",\"\"),\"\")}",
+            "sortFormat": "",
+            "sortFormatDataType": null,
+            "isEditable": true,
+            "adminDescription": null,
+            "customData": null,
+            "formatExpressions": [
+                {
+                    "id": "d9f2e583-3f92-4b40-8ac3-eeea75a04edc",
+                    "whenExpression": {
+                        "value": "ifnull(if(\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,TRUE,FALSE ),FALSE )",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M11,15L13,15 13,17 11,17 11,15 M11,7L13,7 13,13 11,13 11,7 M12,2C6.47,2,2,6.5,2,12A10,10,0,0,0,12,22A10,10,0,0,0,22,12A10,10,0,0,0,12,2 M12,20A8,8,0,0,1,4,12A8,8,0,0,1,12,4A8,8,0,0,1,20,12A8,8,0,0,1,12,20z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FF980707",
+                    "adminDescription": "",
+                    "description": ""
+                },
+                {
+                    "id": "08b749c6-700d-4ff9-b63d-99fcd583370b",
+                    "whenExpression": {
+                        "value": "ifnull(if(\"Lav trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,TRUE,FALSE ),FALSE )",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M12,2A10,10,0,0,1,22,12A10,10,0,0,1,12,22A10,10,0,0,1,2,12A10,10,0,0,1,12,2 M12,4A8,8,0,0,0,4,12A8,8,0,0,0,12,20A8,8,0,0,0,20,12A8,8,0,0,0,12,4 M11,16.5L6.5,12 7.91,10.59 11,13.67 16.59,8.09 18,9.5 11,16.5z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FF346A3B",
+                    "adminDescription": "",
+                    "description": ""
+                },
+                {
+                    "id": "729e1d31-219f-49ef-8e3c-b58eeaf4d966",
+                    "whenExpression": {
+                        "value": "ifnull(if(ISNULL($DecubitusHealthRisk.HealthRiskLevel),TRUE,FALSE ),FALSE )",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M11,15L13,15 13,17 11,17 11,15 M11,7L13,7 13,13 11,13 11,7 M12,2C6.47,2,2,6.5,2,12A10,10,0,0,0,12,22A10,10,0,0,0,22,12A10,10,0,0,0,12,2 M12,20A8,8,0,0,1,4,12A8,8,0,0,1,12,4A8,8,0,0,1,20,12A8,8,0,0,1,12,20z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FF808384",
+                    "adminDescription": "",
+                    "description": "det er ikke utført risikoevaluering for trykksår"
+                }
+            ],
+            "keyValues": [
+                {
+                    "key": "DocumentCreateConceptId",
+                    "value": "$ARENA-HEALTHRECORD-DOCUMENTCONCEPT/Trygg_Arena_Decubitus_Risk",
+                    "adminDescription": ""
+                }
+            ],
+            "xFormat": "",
+            "xFormatDataType": null,
+            "yFormat": "",
+            "yFormatDataType": null,
+            "rangeFormat": "",
+            "rangeFormatDataType": null
+        },
+        {
+            "id": "51b175b0-d0c9-43b5-afa2-c682197b4695",
+            "oid": "DecubitusTiltak",
+            "name": "Tiltak mot trykksår",
+            "adminName": "Decubitus Tiltak",
+            "description": "Viser status for tiltak rettet mot trykksår som beskrevet i Pasientsikkerhetsprogrammet",
+            "categories": "TryggArenaDesktop,TryggArenaWall,TryggArenaMobil",
+            "displayFormat": "{ifnull(if(and(\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,isnull($DecubitusProcedure.ProcedureName)),\"Ingen tiltak iverksatt\",\"\"),\"\")}{ifnull(if(and(\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,not(isnull($DecubitusProcedure.ProcedureName))),\"Tiltak iverksatt\",\"\"),\"\")}{ifnull(if(and(\"Lav trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,not(isnull($DecubitusProcedure.ProcedureName))),\"Tiltak iverksatt\",\"\"),\"\")}",
+            "sortFormat": "",
+            "sortFormatDataType": null,
+            "isEditable": true,
+            "adminDescription": "",
+            "customData": null,
+            "formatExpressions": [
+                {
+                    "id": "92a4e360-d25d-4711-9d1d-2a8b4bb1e306",
+                    "whenExpression": {
+                        "value": "ifnull(if(and(\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,isnull($DecubitusProcedure.ProcedureName)),TRUE,FALSE),FALSE)",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M11,15L13,15 13,17 11,17 11,15 M11,7L13,7 13,13 11,13 11,7 M12,2C6.47,2,2,6.5,2,12A10,10,0,0,0,12,22A10,10,0,0,0,22,12A10,10,0,0,0,12,2 M12,20A8,8,0,0,1,4,12A8,8,0,0,1,12,4A8,8,0,0,1,20,12A8,8,0,0,1,12,20z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FF980707",
+                    "adminDescription": "",
+                    "description": ""
+                },
+                {
+                    "id": "75cb4131-3243-41af-95f2-4d7f63d2cb67",
+                    "whenExpression": {
+                        "value": "ifnull(if(and(\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,not(isnull($DecubitusProcedure.ProcedureName))),TRUE,FALSE),FALSE)",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M12,2A10,10,0,0,1,22,12A10,10,0,0,1,12,22A10,10,0,0,1,2,12A10,10,0,0,1,12,2 M12,4A8,8,0,0,0,4,12A8,8,0,0,0,12,20A8,8,0,0,0,20,12A8,8,0,0,0,12,4 M11,16.5L6.5,12 7.91,10.59 11,13.67 16.59,8.09 18,9.5 11,16.5z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FF346A3B",
+                    "adminDescription": "",
+                    "description": ""
+                },
+                {
+                    "id": "d20ac19d-1d9f-49a8-bc9d-d8a3d5d1babf",
+                    "whenExpression": {
+                        "value": "ifnull(if(and(\"Lav trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel,not(isnull($DecubitusProcedure.ProcedureName))),TRUE,FALSE),FALSE)",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M12,2A10,10,0,0,1,22,12A10,10,0,0,1,12,22A10,10,0,0,1,2,12A10,10,0,0,1,12,2 M12,4A8,8,0,0,0,4,12A8,8,0,0,0,12,20A8,8,0,0,0,20,12A8,8,0,0,0,12,4 M11,16.5L6.5,12 7.91,10.59 11,13.67 16.59,8.09 18,9.5 11,16.5z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FF346A3B",
+                    "adminDescription": "",
+                    "description": "tiltak iverksatt til tross for at pasienten har lav risiko for trykksår"
+                }
+            ],
+            "keyValues": [
+                {
+                    "key": "DocumentCreateConceptId",
+                    "value": "$ARENA-HEALTHRECORD-DOCUMENTCONCEPT/Trygg_Arena_Decubitus_Meassures",
+                    "adminDescription": ""
+                }
+            ],
+            "xFormat": "",
+            "xFormatDataType": null,
+            "yFormat": "",
+            "yFormatDataType": null,
+            "rangeFormat": "",
+            "rangeFormatDataType": null
+        },
+        {
+            "id": "52dfb1be-8ba8-454d-87be-28b32af28a02",
+            "oid": "DecubitusSkinExam",
+            "name": "Hudundersøkelse",
+            "adminName": "DecubitusSkinExam",
+            "description": "Viser tid siden siste hudundersøkelse",
+            "categories": "TryggArenaDesktop,TryggArenaWall,TryggArenaMobil",
+            "displayFormat": "{ifnull(if(AND(432000000000<NOWTICKS()-datevalue($SkinExamination.ProcedureTime),\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel),\"Mer enn 12 timer siden hudundersøkelse\",\"Mindre enn 12 timer siden hudundersøkelse\" ),\"\" )}{ifnull(if(AND(isnull($SkinExamination.ProcedureTime),\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel),\"Det er ikke utført hudundersøkelse\",\"\" ),\"\" )}",
+            "sortFormat": "",
+            "sortFormatDataType": null,
+            "isEditable": true,
+            "adminDescription": "",
+            "customData": null,
+            "formatExpressions": [
+                {
+                    "id": "9adc2242-67b3-4eb4-9400-c5cf6428a2a3",
+                    "whenExpression": {
+                        "value": "ifnull(if(AND(isnull($SkinExamination.ProcedureTime),\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel),TRUE,FALSE ),FALSE )",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M11,15L13,15 13,17 11,17 11,15 M11,7L13,7 13,13 11,13 11,7 M12,2C6.47,2,2,6.5,2,12A10,10,0,0,0,12,22A10,10,0,0,0,22,12A10,10,0,0,0,12,2 M12,20A8,8,0,0,1,4,12A8,8,0,0,1,12,4A8,8,0,0,1,20,12A8,8,0,0,1,12,20z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FF980707",
+                    "adminDescription": "",
+                    "description": ""
+                },
+                {
+                    "id": "a7159a57-1d3d-49e8-a89a-555d5ca0a5fa",
+                    "whenExpression": {
+                        "value": "ifnull(if(AND(432000000000<NOWTICKS()-datevalue($SkinExamination.ProcedureTime),\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel),TRUE,FALSE),FALSE )",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M11,15L13,15 13,17 11,17 11,15 M11,7L13,7 13,13 11,13 11,7 M12,2C6.47,2,2,6.5,2,12A10,10,0,0,0,12,22A10,10,0,0,0,22,12A10,10,0,0,0,12,2 M12,20A8,8,0,0,1,4,12A8,8,0,0,1,12,4A8,8,0,0,1,20,12A8,8,0,0,1,12,20z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FFD69600",
+                    "adminDescription": "",
+                    "description": ""
+                },
+                {
+                    "id": "439416a7-af16-4f9a-9ba2-dce1a03fceac",
+                    "whenExpression": {
+                        "value": "ifnull(if(AND(432000000000>NOWTICKS()-datevalue($SkinExamination.ProcedureTime),\"Høy trykksårrisiko\"=$DecubitusHealthRisk.HealthRiskLevel),TRUE,FALSE),FALSE )",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M12,2A10,10,0,0,1,22,12A10,10,0,0,1,12,22A10,10,0,0,1,2,12A10,10,0,0,1,12,2 M12,4A8,8,0,0,0,4,12A8,8,0,0,0,12,20A8,8,0,0,0,20,12A8,8,0,0,0,12,4 M11,16.5L6.5,12 7.91,10.59 11,13.67 16.59,8.09 18,9.5 11,16.5z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FF346A3B",
+                    "adminDescription": "",
+                    "description": ""
+                }
+            ],
+            "keyValues": [
+                {
+                    "key": "DocumentCreateConceptId",
+                    "value": "$ARENA-HEALTHRECORD-DOCUMENTCONCEPT/Trygg_Arena_Skin_Exam",
+                    "adminDescription": ""
+                }
+            ],
+            "xFormat": "",
+            "xFormatDataType": null,
+            "yFormat": "",
+            "yFormatDataType": null,
+            "rangeFormat": "",
+            "rangeFormatDataType": null
+        },
+        {
+            "id": "c0e68bb0-3f34-4a26-a755-23cd13d02ec4",
+            "oid": "DecubitusEvaluation",
+            "name": "Tavlemøte trykksår",
+            "adminName": "DecubitusEvaluation",
+            "description": "Siste tavlemøte for evaluering rundt risikovurdering og tiltak rettet mot trykksår",
+            "categories": "TryggArenaDesktop,TryggArenaWall,TryggArenaMobil",
+            "displayFormat": "{IF(isnull($DecubitusEvaluation.ProcedureTime),\"\", concatenate( \"Siste evaluering av tiltak:  \", FORMATDATETIME(DATEVALUE($DecubitusEvaluation.ProcedureTime), \"d\", \"nb-no\")))}",
+            "sortFormat": "",
+            "sortFormatDataType": null,
+            "isEditable": true,
+            "adminDescription": "",
+            "customData": null,
+            "formatExpressions": [
+                {
+                    "id": "48d6f620-220c-4c15-8d77-fc27f68ecf2e",
+                    "whenExpression": {
+                        "value": "IFNULL(IF(6048000000000>(nowticks()-DATEVALUE($DecubitusEvaluation.ProcedureTime)),TRUE,FALSE),FALSE)",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M12,2A10,10,0,0,1,22,12A10,10,0,0,1,12,22A10,10,0,0,1,2,12A10,10,0,0,1,12,2 M12,4A8,8,0,0,0,4,12A8,8,0,0,0,12,20A8,8,0,0,0,20,12A8,8,0,0,0,12,4 M11,16.5L6.5,12 7.91,10.59 11,13.67 16.59,8.09 18,9.5 11,16.5z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FF346A3B",
+                    "adminDescription": "",
+                    "description": "mindre enn én uke siden forrige tavlemøte/evaluering om ernæring"
+                },
+                {
+                    "id": "f7896c6a-22a0-47e5-8b9d-7ab4c8c5f32d",
+                    "whenExpression": {
+                        "value": "IFNULL(IF(6048000000000<(nowticks()-DATEVALUE($DecubitusEvaluation.ProcedureTime)),TRUE,FALSE),FALSE)",
+                        "adminDescription": ""
+                    },
+                    "alertType": "CUSTOM",
+                    "alertTypeForegroundColor": "#FF000000",
+                    "alertTypeBackgroundColor": "#00FFFFFF",
+                    "symbol": "M11,15L13,15 13,17 11,17 11,15 M11,7L13,7 13,13 11,13 11,7 M12,2C6.47,2,2,6.5,2,12A10,10,0,0,0,12,22A10,10,0,0,0,22,12A10,10,0,0,0,12,2 M12,20A8,8,0,0,1,4,12A8,8,0,0,1,12,4A8,8,0,0,1,20,12A8,8,0,0,1,12,20z",
+                    "symbolType": "Geometry",
+                    "symbolForegroundColor": "#FFD69600",
+                    "adminDescription": "",
+                    "description": "mer enn én uke siden forrige tavlemøte/evaluering om ernæring"
+                }
+            ],
+            "keyValues": [
+                {
+                    "key": "DocumentCreateConceptId",
+                    "value": "$ARENA-HEALTHRECORD-DOCUMENTCONCEPT/Trygg_Arena_Decubitus_Meassures_Evaluation",
+                    "adminDescription": ""
+                }
+            ],
+            "xFormat": "",
+            "xFormatDataType": null,
+            "yFormat": "",
+            "yFormatDataType": null,
+            "rangeFormat": "",
+            "rangeFormatDataType": null
+        }
+    ],
+    "version": "45.0.0",
+    "approved": true,
+    "deleted": null,
+    "createdByAuthor": "bna",
+    "created": "2021-09-03T08:54:32",
+    "deletedByAuthor": null,
+    "imported": true,
+    "versionComment": "første versjon av trygg arena",
+    "deletedTimeStamp": null,
+    "isDeleted": false,
+    "basedOnVersion": "44.0.0",
+    "adminDescription": null,
+    "keyValues": []
+}
